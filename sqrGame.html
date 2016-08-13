@@ -107,13 +107,10 @@ function mouseUp(e) {
 	var dy = pos.y - mouse_y_tmp;
 	
 	if (Math.abs(dx) <= 20 && Math.abs(dy) <= 20) {
-		for (var i=0; i<horiSlider[currentLevel]; i++) {
+		for (var i=0; i<level.numOfHorizontalSliders; i++) {
 			if (horizontalSlider[i].x*cellWidth < pos.x && pos.x < (horizontalSlider[i].x+1)*cellWidth && horizontalSlider[i].y*cellHeight < pos.y && pos.y < (horizontalSlider[i].y+1)*cellHeight) {
 				horizontalSlider[i].move();
 			}
-		}
-		if (horizontalSliderWall.x*cellWidth < pos.x && pos.x < (horizontalSliderWall.x+1)*cellWidth && horizontalSliderWall.y*cellHeight < pos.y && pos.y < (horizontalSliderWall.y+1)*cellHeight) {
-			horizontalSliderWall.move();
 		}
 	}
 	
@@ -204,11 +201,10 @@ function refreshBoard() {
 	}
 	
 	goalSqr.draw();
-	horizontalSliderWall.draw();
 	player_sqr.draw();
 	
 	// Draw all horizontal sliders
-	for (var u=0; u < horiSlider[currentLevel]; u++) {
+	for (var u=0; u < level.numOfHorizontalSliders; u++) {
 		horizontalSlider[u].draw();
 	}
 
@@ -241,15 +237,15 @@ function refreshLevel(k) {
 
 	goalSqr = new GoalSqr(level.xGoal, level.yGoal);
 	player_sqr = new PlayerSqr(level.xPlayer, level.yPlayer);
-	horizontalSliderWall = new HorizontalSliderWall(3, 3, 1, 'F');
+	//horizontalSliderWall = new HorizontalSliderWall(3, 3, 1, 'F');
 	
 	tempMap[k][player_sqr.x][player_sqr.y] = '@';
 	
 	horizontalSlider = new Array(level.numOfHorizontalSliders);
 	
-	horiSliderX = new Array(horiSlider[k]);
-	horiSliderY = new Array(horiSlider[k]);
-	for (var u=0; u < horiSlider[k]; u++) {
+	horiSliderX = new Array(level.numOfHorizontalSliders);
+	horiSliderY = new Array(level.numOfHorizontalSliders);
+	for (var u=0; u < level.numOfHorizontalSliders; u++) {
 		horizontalSlider[u] = new HorizontalSliderSqr(xHoriSlider[k][u], yHoriSlider[k][u], 1);
 		tempMap[k][horizontalSlider[u].x][horizontalSlider[u].y] = '@';
 	}

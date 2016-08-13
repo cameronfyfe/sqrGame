@@ -13,7 +13,7 @@ class Sqr {
 		this.cell_pad = cell_pad;
 		this.radius = radius;
 	}
-	
+
 	draw() {
 		ctx.fillStyle = this.color;
 		var x_left = (this.x+this.cell_pad)*cellWidth;
@@ -33,50 +33,66 @@ class Sqr {
 	}
 	
 	moveLeft() {
+		if (this.x === 0) {
+			return;
+		}
 		var x_old = this.x;
 		var y_old = this.y;
 		var cellToLeft = block[this.x-1][this.y];
 		var tempToLeft = tempMap[currentLevel][this.x-1][this.y];
 		
-		while (isCellBlockedOnRight(cellToLeft, tempToLeft) == false && this.x > 0) {
+		while (isCellBlockedOnRight(cellToLeft, tempToLeft) == false) {
 			this.x--;
+			if (this.x === 0) {
+				break;
+			}
 			cellToLeft = block[this.x-1][this.y];
 			tempToLeft = tempMap[currentLevel][this.x-1][this.y];
 		}
 		
 		tempMap[currentLevel][x_old][y_old] = ' ';
 		tempMap[currentLevel][this.x][this.y] = '@';
-		//mainX = this.x; //TODO: delete
 		this.drawMove(x_old, y_old);
 	}
 	
 	moveRight() {
+		if (this.x === level.N-1) {
+			return;
+		}
 		var x_old = this.x;
 		var y_old = this.y;
 		var cellToRight = block[this.x+1][this.y];
 		var tempToRight = tempMap[currentLevel][this.x+1][this.y];
 		
-		while (isCellBlockedOnLeft(cellToRight, tempToRight) == false && this.x < mapN[currentLevel]) {
+		while (isCellBlockedOnLeft(cellToRight, tempToRight) == false) {
 			this.x++;
+			if (this.x === level.N-1) {
+				break;
+			}
 			cellToRight = block[this.x+1][this.y];
 			tempToRight = tempMap[currentLevel][this.x+1][this.y];
 		}
 		
 		tempMap[currentLevel][x_old][y_old] = ' ';
 		tempMap[currentLevel][this.x][this.y] = '@';
-		//mainX = this.x; //TODO: delete
 		this.drawMove(x_old, y_old);
 	}
 	
 	moveUp() {
+		if (this.y === 0) {
+			return;
+		}
 		var x_old = this.x;
 		var y_old = this.y;
 		var cellAbove = block[this.x][this.y-1];
 		var tempAbove = tempMap[currentLevel][this.x][this.y-1];
 		var tempHere = tempMap[currentLevel][this.x][this.y];
 		
-		while (isCellBlockedOnBottom(cellAbove, tempAbove, tempHere) == false && this.y > 0) {
+		while (isCellBlockedOnBottom(cellAbove, tempAbove, tempHere) == false) {
 			this.y--;
+			if (this.y === 0) {
+				break;
+			}
 			cellAbove = block[this.x][this.y-1];
 			tempAbove = tempMap[currentLevel][this.x][this.y-1];
 		}
@@ -87,14 +103,19 @@ class Sqr {
 	}
 	
 	moveDown() {
+		if (this.y === level.M-1) {
+			return;
+		}
 		var x_old = this.x;
 		var y_old = this.y;
 		var cellBelow = block[this.x][this.y+1];
 		var tempBelow = tempMap[currentLevel][this.x][this.y+1];
 		
-		
-		while (isCellBlockedOnTop(cellBelow, tempBelow) == false && this.y <= mapM[currentLevel]) {
+		while (isCellBlockedOnTop(cellBelow, tempBelow) == false) {
 			this.y++;
+			if (this.y === level.M-1) {
+				break;
+			}
 			cellBelow = block[this.x][this.y+1];
 			tempBelow = tempMap[currentLevel][this.x][this.y+1];
 		}
@@ -173,7 +194,6 @@ class HorizontalSliderWall extends HorizontalSliderSqr {
 	draw() {
 		ctx.fillStyle = this.borderColor;
 		var b = this.shape;
-		var edge_thickness = wall_thickness/2;
 		//Bottom
 		if (b == '_' || b == 'L' || b === 'J' || b == '=' || b == 'U' || b == '<' || b == '>') {
 			ctx.fillRect((this.x-EDGE_THICKNESS)*cellWidth,(this.y+1-EDGE_THICKNESS)*cellHeight,(1+2*EDGE_THICKNESS)*cellWidth,EDGE_THICKNESS*cellHeight);
@@ -184,7 +204,7 @@ class HorizontalSliderWall extends HorizontalSliderSqr {
 		}
 		//Left
 		if (b == '[' || b == 'F' || b === 'L' || b == '|' || b == '^' || b == '<' || b == 'U') {
-			ctx.fillRect((this.x+edge_thickness)*cellWidth,(this.y+edge_thickness)*cellHeight,(this.cell_pad-edge_thickness)*cellWidth,(1-2*edge_thickness)*cellHeight);
+			ctx.fillRect((this.x+EDGE_THICKNESS)*cellWidth,(this.y+EDGE_THICKNESS)*cellHeight,(this.cell_pad-EDGE_THICKNESS)*cellWidth,(1-2*EDGE_THICKNESS)*cellHeight);
 		}
 		//Right
 		if (b == ']' || b == 'T' || b === 'J' || b == '|' || b == '^' || b == '>' || b == 'U') {
